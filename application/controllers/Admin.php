@@ -256,4 +256,25 @@ public function __construct()
           $this->template->load('halaman_master','template/includes/data_pembayaran',$data);
       }
   }
+  public function Getnisnsiswa($id=null)
+  {
+      $this->db->where('nisn',$id);
+      $data=$this->db->get('t_siswa')->row();
+      echo json_encode($data);
+  }
+  public function Hapussiswa()
+  {
+      $id=$this->input->post('nisn_hapus');
+      $this->db->trans_start();
+      $this->db->where('nisn',$id);
+      $this->db->delete('t_siswa');
+      $this->db->trans_complete();
+      if ($this->db->trans_status()== FALSE) {
+          $this->session->set_flashdata('pesan','Data siswa tidak bisa di hapus, karena masih berelasi dengan tabel lain');
+          redirect('Admin/Siswa');
+      }else{
+          $this->session->set_flashdata('pesan','Data siswa berhasil di hapus');
+          redirect('Admin/Siswa');
+      }
+  }
 }

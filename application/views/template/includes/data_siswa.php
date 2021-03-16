@@ -90,7 +90,7 @@
                         echo "<td>$tampilkan_siswa->alamat</td>";
                         echo "<td>$tampilkan_siswa->no_telepon</td>";
                         echo "<td>$tampilkan_siswa->tahun</td>";
-                        echo "<td>button</td>";
+                        echo "<td><button class='btn btn-primary btn-xs'>Edit</button> <button class='btn btn-danger btn-xs' onClick='hapus($tampilkan_siswa->nisn)'>Hapus</button></td>";
                     echo "</tr>";
                 }
             ?>
@@ -99,5 +99,45 @@
 </div>
 
 <!-- JS -->
+<script>
+    function hapus(id){
+        $('#form_hapus')[0].reset();
+        $.ajax({
+            url : "<?php echo base_url('index.php/Admin/Getnisnsiswa') ?>/"+id,
+            type:"GET",
+            dataType:"JSON",
+            success : function(data){
+                $('[name="nisn_hapus"]').val(data.nisn);
+                $('#modal-default').modal('show');
+            },
+            error : function(jqXHR, textStatus, errorThrown){
+                alert('Gagal ambil ajax');
+            }
 
+        });
+    }
+</script>
 <!-- Modal -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Pesan Peringatan Hapus</h4>
+        </div>
+        <div class="modal-body">
+        <form action="<?php echo base_url() ?>index.php/Admin/Hapussiswa" id="form_hapus" method="POST">
+        <input type="hidden" name="nisn_hapus" value="" id="">
+        Apakah anda yakin akan menghapus data tersebut.?!
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+        </form>
+    </div>
+    <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
